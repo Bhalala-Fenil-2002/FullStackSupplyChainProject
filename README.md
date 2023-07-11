@@ -31,6 +31,14 @@ From there, follow the instructions on the hosted React app. It will walk you th
 
 ## FAQ
 
+# React client
+
+This react project is unopinionated with only `web3.js` as an added dependency, so nothing stands in your way.
+
+## Getting started
+
+Run `npm start` to start the dev server, and `npm build` to create a production build.
+
 - __How do I use this with Ganache (or any other network)?__
 
   The Truffle project is set to deploy to Ganache by default. If you'd like to change this, it's as easy as modifying the Truffle config file! Check out [our documentation on adding network configurations](https://trufflesuite.com/docs/truffle/reference/configuration/#networks). From there, you can run `truffle migrate` pointed to another network, restart the React dev server, and see the change take place.
