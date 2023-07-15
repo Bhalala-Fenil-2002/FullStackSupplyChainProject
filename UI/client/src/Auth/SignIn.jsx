@@ -1,7 +1,34 @@
-import { Link } from "react-router-dom";
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Link, useNavigate } from "react-router-dom";
+import { Form, Button } from 'react-bootstrap';
+import axios from "axios";
+import { useState } from "react";
 
 function SignIn() {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    let navigate = useNavigate();
+
+    let UserData = {
+        "email": email,
+        "password": password
+    };    
+
+    const UserLogin = async () => {
+        await axios
+            .post(`http://localhost:4000/signin`, UserData)
+            .then((res) => {
+                console.log(res);
+                localStorage.setItem('session_id', res.data.token);
+                if (res.data.status === 200) {
+                    navigate("/home");
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     return (
         <div className="authentication">
             <div className="auth-box">
@@ -13,20 +40,20 @@ function SignIn() {
                     <form>
                         <Form.Control
                             type="text"
-                            id="inputPassword5"
                             className="mb-3"
-                            aria-describedby="passwordHelpBlock"
                             placeholder='example@gmail.com'
+                            onChange={(email) => setEmail(email.target.value)}
+                            value={email}
                         />
                         <Form.Control
                             type="password"
-                            id="inputPassword5"
                             className="mb-3"
-                            aria-describedby="passwordHelpBlock"
                             placeholder='Password'
+                            onChange={(password) => setPassword(password.target.value)}
+                            value={password}
                         />
                         <p className="text-left float-end text-capitalize"><Link to="/reset-password">Forgot Password?</Link></p>
-                        <Button className="mb-3 w-100" variant="primary">Sign In</Button>
+                        <Button className="mb-3 w-100" variant="primary" onClick={UserLogin}>Sign In</Button>
                         <p className="m-0 text-center text-capitalize">Don't have an account?&nbsp;<Link to="/sign-up">Create an account </Link></p>
                     </form>
                 </div>
