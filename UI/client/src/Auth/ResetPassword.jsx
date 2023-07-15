@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 
 function ResetPassword() {
     return (
