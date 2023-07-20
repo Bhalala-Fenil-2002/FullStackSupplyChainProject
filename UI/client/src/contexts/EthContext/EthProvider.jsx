@@ -11,10 +11,10 @@ function EthProvider({ children }) {
       if (artifact) {
         try {
           const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
-          console.log("web3", web3);
+          // console.log("web3", web3);
           await window.ethereum.enable();
           const accounts = await web3.eth.getAccounts();
-          console.log("web3", accounts);
+          // console.log("web3", accounts);
           const networkID = await web3.eth.net.getId();
           const { abi } = artifact;
           let address, contract;
