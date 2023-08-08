@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Table } from 'react-bootstrap';
 import { FaCircleArrowLeft } from 'react-icons/fa6';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function ProductView() {
+
+    let params = useParams();
+    const [productData, setProductData] = useState("");
+
+
+    useEffect(() => {
+        axios.get(`http://localhost:4000/my-product/`, { params: { view: params.id } })
+            .then((response) => {
+                
+                console.log(response.data.message);
+                setProductData(response.data.message)
+            })
+            .catch((error) => {
+                console.log(error.message);
+            })
+    }, []);
+
+    if (!productData || !Object.keys(productData).length) return <p>...loading</p>
+
     return (
         <>
             <div className='content-header'>
@@ -17,12 +37,15 @@ function ProductView() {
                         <Card>
                             <div className='product-info-left'>
                                 <div className='product-info-img'>
-                                    <img src="./images/product-default.jpg" alt="" srcset="" />
+                                    {
+                                        productData.images ?
+                                            < img src={"http://localhost:4000/images/my_products/" + productData.images} alt={productData.product} srcSet="" width={'100%'} />
+                                            : <img src="/images/product-default.jpg" alt={productData.product} srcSet="" />
+                                    }
                                 </div>
                                 <hr />
                                 <div className="product-description">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                    </p>
+                                    <p>{productData.details}</p>
                                 </div>
                             </div>
                         </Card>
@@ -37,24 +60,24 @@ function ProductView() {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>#</td>
-                                    <td>0102</td>
+                                    <td>ID</td>
+                                    <td>{productData._id}</td>
                                 </tr>
                                 <tr>
                                     <td>Name</td>
-                                    <td>Demo</td>
+                                    <td>{productData.product}</td>
                                 </tr>
                                 <tr>
                                     <td>Category</td>
-                                    <td>Demo 2</td>
+                                    <td>{productData.brand}</td>
                                 </tr>
                                 <tr>
                                     <td>General Code</td>
-                                    <td>Demo 2</td>
+                                    <td>{productData.category}</td>
                                 </tr>
                                 <tr>
                                     <td>SKUs Code</td>
-                                    <td>PRO-XX000-XX</td>
+                                    <td>{productData.skus}</td>
                                 </tr>
                                 <tr>
                                     <td>Rating</td>
@@ -62,15 +85,15 @@ function ProductView() {
                                 </tr>
                                 <tr>
                                     <td>Price</td>
-                                    <td>12$</td>
+                                    <td>{productData.price}</td>
                                 </tr>
                                 <tr>
                                     <td>Qty</td>
-                                    <td>12</td>
+                                    <td>{productData.qty}</td>
                                 </tr>
                                 <tr>
                                     <td>Status</td>
-                                    <td>Enable</td>
+                                    <td>{productData.status === 1 ? 'Enable' : 'Disabled'}</td>
                                 </tr>
                                 <tr>
                                     <td>How many Orders?</td>

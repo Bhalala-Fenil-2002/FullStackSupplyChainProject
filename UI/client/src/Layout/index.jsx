@@ -18,7 +18,7 @@ function Intro({ children }) {
                 }
             })
             .then((res) => {
-                console.log(res);
+                // console.log(res);
                 setUserData({
                     fname: res.data.message.fname,
                     lname: res.data.message.lname

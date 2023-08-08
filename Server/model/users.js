@@ -9,7 +9,7 @@ const UserSchema = mongoose.Schema({
     password: { type: String, required: true }
 })
 
-// UserSchema.plugin(uniqueValidator);
+UserSchema.plugin(uniqueValidator);
 
 const USERSCHEMA = mongoose.model('users', UserSchema);
 

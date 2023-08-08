@@ -1,10 +1,17 @@
 import { React } from 'react';
-import { Link } from "react-router-dom";
-import { FaHouse, FaRightFromBracket, FaUserGroup } from "react-icons/fa6";
+import { Link, useNavigate } from "react-router-dom";
+import { FaBoxOpen, FaHouse, FaRightFromBracket, FaUserGroup } from "react-icons/fa6";
 import { FaCartPlus, FaBoxes } from "react-icons/fa";
 import { SiChainlink } from 'react-icons/si';
 
-function SideBar({userData}) {
+function SideBar({ userData }) {
+
+    let navigate = useNavigate();
+    const SignOut = () => {
+        localStorage.removeItem('session_id');
+        navigate("/");
+    }
+
     return (
         <>
             <div className='sidebar'>
@@ -14,7 +21,7 @@ function SideBar({userData}) {
                 <div className='sidemenus'>
                     <div className='user-panal'>
                         <div className='user-avatar'>
-                            <img src="./images/user_default.jpg" alt="" srcset="" />
+                            <img src="/images/user_default.jpg" alt="" srcSet="" />
                         </div>
                         <div className='user-info'>
                             <Link path='/'>{userData.fname + " " + userData.lname}</Link>
@@ -40,16 +47,22 @@ function SideBar({userData}) {
                             </Link>
                         </li>
                         <li>
+                            <Link to='/my-category' className='menuitem'>
+                                <FaBoxOpen size={20} color='#b5b5b5' className='menu-icon' />
+                                <div className='menu-title'>My Category</div>
+                            </Link>
+                        </li>
+                        <li>
                             <Link className='menuitem'>
                                 <FaCartPlus size={20} color='#b5b5b5' className='menu-icon' />
                                 <div className='menu-title'>My Orders</div>
                             </Link>
                         </li>
                         <li>
-                            <Link className='menuitem'>
+                            <a href='javascript:void(0)' className='menuitem' onClick={SignOut}>
                                 <FaRightFromBracket size={18} color='#b5b5b5' className='menu-icon' />
                                 <div className='menu-title'>Sign Out</div>
-                            </Link>
+                            </a>
                         </li>
                     </ul>
                 </div>

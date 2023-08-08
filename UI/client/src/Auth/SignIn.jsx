@@ -47,12 +47,12 @@ function SignIn() {
                         />
                         <Form.Control
                             type="password"
-                            className="mb-3"
+                            className="mb-1"
                             placeholder='Password'
                             onChange={(password) => setPassword(password.target.value)}
                             value={password}
                         />
-                        <p className="text-left float-end text-capitalize"><Link to="/reset-password">Forgot Password?</Link></p>
+                        <p className="text-left float-end text-capitalize mb-3"><Link to="/reset-password">Forgot Password?</Link></p>
                         <Button className="mb-3 w-100" variant="primary" onClick={UserLogin}>Sign In</Button>
                         <p className="m-0 text-center text-capitalize">Don't have an account?&nbsp;<Link to="/sign-up">Create an account </Link></p>
                     </form>

@@ -15,6 +15,11 @@ import Dashboard from "./components/Dashboard";
 import MyProduct from './components/MyProduct';
 import AddProduct from './components/MyProduct/form';
 import ViewProduct from './components/MyProduct/view';
+import PageNotFound from "./Layout/PageNotFound";
+
+// ----- My Category -----
+import MyCategory from './components/MyCategory';
+import AddCategory from './components/MyCategory/form';
 
 function App() {
   return (
@@ -31,8 +36,15 @@ function App() {
 
         {/* My Product */}
         <Route path="/my-product" element={<Layout><MyProduct /></Layout>} />
-        <Route path="/add-product" element={<Layout><AddProduct /></Layout>} />
-        <Route path="/view-product" element={<Layout><ViewProduct/></Layout>}></Route>
+        <Route path="/add-product/:id?" element={<Layout><AddProduct /></Layout>} />
+        <Route path="/view-product/:id" element={<Layout><ViewProduct /></Layout>}></Route>
+
+        {/* My Category */}
+        <Route path="/my-category" element={<Layout><MyCategory /></Layout>} />
+        <Route path="/add-category/:id?" element={<Layout><AddCategory /></Layout>} />
+        
+        {/* PageNotFound */}
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>
   );

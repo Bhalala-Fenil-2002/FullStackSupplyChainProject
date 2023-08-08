@@ -50,6 +50,25 @@ h6 {
   box-shadow: 0 0 0 0.05rem rgba(227 229 231);
 }
 
+.required-lable {
+  color: red;
+}
+
+.not-found-data {
+  height: 50px;
+  line-height: 50px;
+  font-size: 22px;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+.table-img {
+  width: 100px;
+  height: 100px;
+}
+
 /* ----------------------------------- */
 
 /* Authentication signin && signup CSS */
@@ -99,13 +118,67 @@ h6 {
 
 /* -------------------------------- */
 
+/* ------ PageNotFound ---------- */
+
+.section {
+  padding: 4rem 2rem;
+  text-align: center;
+  width: 100%;
+  height: 100vh;
+  background: #6fe5c1;
+}
+
+.section a {
+  text-decoration: none;
+}
+
+.section .error {
+  font-size: 150px;
+  color: #008B62;
+  text-shadow:
+    1px 1px 1px #00593E,
+    2px 2px 1px #00593E,
+    3px 3px 1px #00593E,
+    4px 4px 1px #00593E,
+    5px 5px 1px #00593E,
+    6px 6px 1px #00593E,
+    7px 7px 1px #00593E,
+    8px 8px 1px #00593E,
+    25px 25px 8px rgba(0, 0, 0, 0.2);
+}
+
+.page {
+  margin: 2rem 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #444;
+}
+
+.back-home {
+  display: inline-block;
+  border: 2px solid #00593e;
+  color: #00593e;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.75rem 1rem 0.6rem;
+  transition: all 0.2s linear;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.back-home:hover {
+  background: #008b62;
+  color: #ddd;
+}
+
+/* -------------------------------- */
+
 /* --- Siderbar section CSS --- */
 
 .sidebar {
   width: 265px;
   height: 100%;
   background-color: #343a40;
-  position: absolute;
+  position: fixed;
   top: 0;
 }
 
@@ -210,6 +283,10 @@ h6 {
   background-color: #f7f7f7;
   margin-left: 265px;
   border-bottom: 1px solid #b5b5b5;
+  position: sticky;
+  width: calc(100% - 265px);
+  top: 0;
+  z-index: 999;
 }
 
 .nav-bar {
@@ -312,31 +389,45 @@ h6 {
 /* ---- Content Table CSS ---- */
 
 .footer-pagination {
-  padding: 13px 0px;
+  margin: 12px 0px;
 }
 
-.paginations .pages-link {
-  padding: 2px 10px;
+.paginations .pages-item {
+  padding: 8px 15px;
   background: #f7f7f7;
-  border: 1px solid #6c757d;
+  border: 1px solid #929292;
   font-size: 20px;
   text-decoration: none;
-  color: #404040;
+  color: #ffffff;
+  cursor: pointer;
 }
 
-.paginations .pages-item:first-child .pages-link {
+.paginations .pages-item:first-child {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
 
-.paginations .pages-item:last-child .pages-link {
+.paginations .pages-item:last-child {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
 
+.my-product .pro-img {
+  width: 140px;
+  height: 140px;
+}
+
+.my-product .pro-img img {
+  width: 100%;
+  object-fit: fill;
+  height: 100%;
+}
+
+.action-col {
+  width: 185px;
+}
+
 /* ----------------------------- */
-
-
 
 /* ---- Content View CSS ---- */
 
@@ -402,6 +493,7 @@ h6 {
 
 .product-images img {
   width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -433,14 +525,16 @@ h6 {
 
 .main-footer {
   margin-left: 265px;
-  padding: 17px 0;
+  height: 55px;
+  line-height: 55px;
   background-color: #f7f7f7;
   border-top: 1px solid;
   text-align: center;
   color: #8f8f8f;
-  /* bottom: 0;
-  position: fixed;
-  width: 100%; */
+  bottom: 0;
+  position: sticky;
+  width: calc(100% - 265px);
+  z-index: 999;
 }
 
 .main-footer strong {
