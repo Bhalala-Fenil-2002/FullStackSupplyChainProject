@@ -1,6 +1,6 @@
 import { React } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import { FaBoxOpen, FaHouse, FaRightFromBracket, FaUserGroup } from "react-icons/fa6";
+import { FaBoxOpen, FaCubes, FaCubesStacked, FaHouse, FaRightFromBracket, FaTags, FaUserGroup } from "react-icons/fa6";
 import { FaCartPlus, FaBoxes } from "react-icons/fa";
 import { SiChainlink } from 'react-icons/si';
 
@@ -35,21 +35,27 @@ function SideBar({ userData }) {
                             </Link>
                         </li>
                         <li>
-                            <Link className='menuitem'>
-                                <FaUserGroup size={18} color='#b5b5b5' className='menu-icon' />
-                                <div className='menu-title'>Client</div>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to='/my-product' className='menuitem'>
-                                <FaBoxes size={20} color='#b5b5b5' className='menu-icon' />
-                                <div className='menu-title'>My Products</div>
+                            <Link to='/my-brand' className='menuitem'>
+                                <FaTags size={20} color='#b5b5b5' className='menu-icon' />
+                                <div className='menu-title'>My Brand</div>
                             </Link>
                         </li>
                         <li>
                             <Link to='/my-category' className='menuitem'>
-                                <FaBoxOpen size={20} color='#b5b5b5' className='menu-icon' />
+                                <FaCubesStacked size={20} color='#b5b5b5' className='menu-icon' />
                                 <div className='menu-title'>My Category</div>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to='/my-product' className='menuitem'>
+                                <FaCubes size={20} color='#b5b5b5' className='menu-icon' />
+                                <div className='menu-title'>My Products</div>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className='menuitem'>
+                                <FaUserGroup size={18} color='#b5b5b5' className='menu-icon' />
+                                <div className='menu-title'>Client</div>
                             </Link>
                         </li>
                         <li>

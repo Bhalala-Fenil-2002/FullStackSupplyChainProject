@@ -21,6 +21,10 @@ import PageNotFound from "./Layout/PageNotFound";
 import MyCategory from './components/MyCategory';
 import AddCategory from './components/MyCategory/form';
 
+// ----- My Brand ------
+import MyBrand from './components/MyBrand';
+import AddBrand from './components/MyBrand/form';
+
 function App() {
   return (
     <>
@@ -42,6 +46,10 @@ function App() {
         {/* My Category */}
         <Route path="/my-category" element={<Layout><MyCategory /></Layout>} />
         <Route path="/add-category/:id?" element={<Layout><AddCategory /></Layout>} />
+
+        {/* My Brand */}
+        <Route path="/my-brand" element={<Layout><MyBrand /></Layout>} />
+        <Route path="/add-brand/:id?" element={<Layout><AddBrand /></Layout>} />
         
         {/* PageNotFound */}
         <Route path="*" element={<PageNotFound />} />

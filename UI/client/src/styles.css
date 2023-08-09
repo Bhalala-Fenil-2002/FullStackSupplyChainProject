@@ -9,6 +9,10 @@
   font-family: PTSansRegular;
 }
 
+.ck-editor__editable {
+  min-height: 500px;
+}
+
 /* Commen CSS */
 
 p {
@@ -394,12 +398,16 @@ label {
 
 .paginations .pages-item {
   padding: 8px 15px;
-  background: #f7f7f7;
+  background: #929292;
   border: 1px solid #929292;
   font-size: 20px;
   text-decoration: none;
   color: #ffffff;
   cursor: pointer;
+}
+
+.paginations .pages-item.active {
+  background-color: #5e5e5e;
 }
 
 .paginations .pages-item:first-child {

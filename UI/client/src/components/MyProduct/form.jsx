@@ -9,6 +9,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from 'axios';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 // import useEth from "../../contexts/EthContext/useEth";
 
 function AddProduct() {
@@ -364,7 +366,7 @@ function AddProduct() {
                 </div>
                 <div className="col-md-12 mb-3">
                   <label className="form-lable">Product details</label>
-                  <textarea
+                  {/* <textarea
                     className="form-control"
                     rows="3"
                     placeholder="Product details..."
@@ -372,6 +374,18 @@ function AddProduct() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.details}
+                  /> */}
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={values.details}
+                    config={{
+                      placeholder: 'Enter text here...',
+                      // toolbar: ['bold', 'italic']
+                    }}                    
+                    onChange={(event, editor) => {
+                      const data = editor.getData();
+                      setFieldValue("details", data)
+                    }}
                   />
                 </div>
                 <div className="col-md-12 mb-3">
