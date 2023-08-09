@@ -13,6 +13,9 @@ UI/build
 UI/client/src/contracts
 UI/client/*/src/contracts
 
+# Images
+Server/public/images/*
+
 # Testing
 coverage
 

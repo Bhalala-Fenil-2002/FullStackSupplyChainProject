@@ -22,12 +22,13 @@ function DataTable({ dataGetter }) {
     }
 
     const handlePageChange = (page) => {
+        console.log(page);
         setCurrentPage(page);
     }
 
     useEffect(() => {
         getProducts(currentPage);
-    }, [currentPage, getProducts]);
+    }, [currentPage]);
 
     const UpdateProduct = (id) => {
         return navigate(`/${dataGetter.post}/` + id)
@@ -44,14 +45,8 @@ function DataTable({ dataGetter }) {
 
     const ViewProduct = (id) => {
         return navigate(`/${dataGetter.view}/` + id)
-        // axios.get(`http://localhost:4000/${dataGetter.get}/`, { params: { view: id } })
-        //     .then((response) => {
-        //         console.log(response);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     })
     }
+    console.log(Math.ceil(dataCount / 5))
 
     return (
         <>
@@ -83,21 +78,6 @@ function DataTable({ dataGetter }) {
                                     <button type='button' className='btn btn-success' onClick={() => ViewProduct(val._id)}><FaEye size={23} /></button>
                                 </td>
                             </tr>
-
-                            // return <tr key={key}>
-                            //     <td>{key + 1}</td>
-                            //     <td className='pro-img'><img src={'http://localhost:4000/images/my_products/' + val.images} alt="" srcSet="" width="100px" /></td>
-                            //     <td>{val.product}</td>
-                            //     <td>{val.brand}</td>
-                            //     <td>{val.category}</td>
-                            //     <td>{val.price}</td>
-                            //     <td>{val.qty}</td>
-                            //     <td>{val.skus}</td>
-                            //     <td className=''>
-                            //         <button className='btn btn-secondary' onClick={() => UpdateProduct(val._id)}><FaPenToSquare size={20} /></button>&nbsp;&nbsp;
-                            //         <button type='button' className='btn btn-danger' onClick={() => DeleteProduct(val._id)}><FaTrashCan /></button>
-                            //     </td>
-                            // </tr>
                         }) : <tr>
                             <td colSpan={9} className='text-center text-danger not-found-data'>Not Found</td>
                         </tr>)
@@ -107,8 +87,8 @@ function DataTable({ dataGetter }) {
             <div className='footer-pagination'>
                 <ul className='paginations d-flex justify-content-end'>
                     {
-                        dataCount >= 5 && Array.apply(null, Array(Math.round(dataCount / 5))).map((val, key) => {
-                            return <li className='pages-item bg-secondary' onClick={() => handlePageChange(key + 1)}>{key + 1}</li>
+                        dataCount > 5 && Array.apply(null, Array(Math.ceil(dataCount / 5))).map((val, key) => {
+                            return <li className={`pages-item ${currentPage == (key + 1) ? 'active' : ''}`} onClick={() => handlePageChange(key + 1)}>{key + 1}</li>
                         })
                     }
                 </ul>
