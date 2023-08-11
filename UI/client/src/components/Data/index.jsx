@@ -50,10 +50,14 @@ function DataTable({ dataGetter }) {
 
 
     // if (!myproduct || !Object.keys(myproduct).length) return <p>...loading</p>
-    console.log(dataGetter.TableCol.length+2);
+    console.log(dataGetter.TableCol.length + 2);
     return (
         <>
-            <input type="text" id="" value={serachRes} placeholder='Searching...' onChange={(serch) => setserachRes(serch.target.value)} />
+            <div className="row mb-3">
+                <div className="col-md-3">
+                    <input type="text" id="" className='form-control border-secondary' value={serachRes} placeholder='Searching...' onChange={(serch) => setserachRes(serch.target.value)} />
+                </div>
+            </div>
             <Table striped bordered hover>
                 <thead>
                     <tr>
