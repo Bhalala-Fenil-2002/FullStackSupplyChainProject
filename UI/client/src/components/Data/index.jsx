@@ -9,9 +9,14 @@ function DataTable({ dataGetter }) {
     const [myproduct, setMyproduct] = useState([]);
     const [dataCount, setDataCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
+    const [serachRes, setserachRes] = useState('');
+
+    useEffect(() => {
+        getProducts(currentPage);
+    }, [currentPage, serachRes]);
 
     const getProducts = (page) => {
-        axios.get(`http://localhost:4000/${dataGetter.get}?page=${page}`)
+        axios.get(`http://localhost:4000/${dataGetter.get}?search=${serachRes}&page=${page}`)
             .then((response) => {
                 setMyproduct(response.data.message)
                 setDataCount(response.data.data);
@@ -22,13 +27,9 @@ function DataTable({ dataGetter }) {
     }
 
     const handlePageChange = (page) => {
-        console.log(page);
         setCurrentPage(page);
     }
 
-    useEffect(() => {
-        getProducts(currentPage);
-    }, [currentPage]);
 
     const UpdateProduct = (id) => {
         return navigate(`/${dataGetter.post}/` + id)
@@ -46,10 +47,13 @@ function DataTable({ dataGetter }) {
     const ViewProduct = (id) => {
         return navigate(`/${dataGetter.view}/` + id)
     }
-    console.log(Math.ceil(dataCount / 5))
 
+
+    // if (!myproduct || !Object.keys(myproduct).length) return <p>...loading</p>
+    console.log(dataGetter.TableCol.length+2);
     return (
         <>
+            <input type="text" id="" value={serachRes} placeholder='Searching...' onChange={(serch) => setserachRes(serch.target.value)} />
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -63,13 +67,21 @@ function DataTable({ dataGetter }) {
                     </tr>
                 </thead>
                 <tbody>
+                    {/* {(myproduct && !Object.keys(myproduct).length ? <tr><td className='data-loader' colSpan={dataGetter.TableCol.length + 2}>Loading...</td></tr> : '')} */}
                     {
                         (myproduct.length ? myproduct.map((val, inx) => {
                             return <tr key={inx}>
                                 <td>{inx + 1}</td>
                                 {
                                     dataGetter.TableCol.map((filed_val, filed_key) => {
-                                        return <td key={filed_key} className={filed_val === 'image' ? 'table-img' : ''} > {filed_val === 'image' ? <img src={'http://localhost:4000/images/my_products/' + val['images']} alt={val['product']} srcSet="" width="100%" /> : val[filed_val]}</td>
+                                        if (filed_val === "brand" && typeof val[filed_val] !== "string" && val[filed_val].length) {
+                                            return <td key={filed_key}>{val[filed_val].length ? val[filed_val].map((el) => el.brand).join(', ') : ""}</td>
+                                        } else if (filed_val === 'image') {
+                                            return <td key={filed_key} className={filed_val === 'image' ? 'table-img' : ''} ><img src={'http://localhost:4000/images/my_products/' + val['images']} alt={val['product']} srcSet="" width="100%" /></td>
+                                        } else {
+                                            return <td key={filed_key} >{val[filed_val]}</td>
+                                        }
+
                                     })
                                 }
                                 <td className='action-col'>

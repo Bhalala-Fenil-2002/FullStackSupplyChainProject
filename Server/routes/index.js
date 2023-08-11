@@ -1,4 +1,5 @@
 var express = require('express');
+const { default: mongoose } = require('mongoose');
 var router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -11,7 +12,7 @@ let authorization = require('../middleware/authentication');
 let AUTH = require('../model/users');
 let MYPRODUCT = require('../model/MyProducts');
 let MYCATEGORY = require('../model/MyCategory');
-const { default: mongoose } = require('mongoose');
+let MYBRAND = require('../model/MyBrand');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -171,15 +172,20 @@ router.get('/my-category/:id?', async function (req, res, next) {
     let myCategory;
     let DataCount;
     let pageCount = req.query.page;
-    console.log();
+    let search = req.query.search;
     if (req.params.id) {
-      myCategory = await MYCATEGORY.findById(req.params.id);
-    } else {
+      myCategory = await MYCATEGORY.findById(req.params.id).populate(['brand']);
+    } else if (pageCount && search) {
+      DataCount = await MYCATEGORY.find({
+        $or: [{category: {$regex: search, $options: 'i'}}]
+      }).count();
+      myCategory = await MYCATEGORY.find({
+        $or: [{category: {$regex: search, $options: 'i'}}]
+      }).populate(['brand']).skip((pageCount - 1) * 5).limit(5).sort({category: 1});
+    } else if(pageCount) {
       DataCount = await MYCATEGORY.count();
-      myCategory = await MYCATEGORY.find().skip((pageCount - 1) * 5).limit(5);
+      myCategory = await MYCATEGORY.find().populate(['brand']).skip((pageCount - 1) * 5).limit(5).sort({ category: 1 });
     }
-    console.log(myCategory);
-
     res.status(200).json({
       status: 200,
       message: myCategory,
@@ -217,12 +223,91 @@ router.post('/add-category/:id?', async function (req, res, next) {
 // Delete category
 router.get('/delete-category', async function (req, res, next) {
   try {
-    const categoryId = req.query.product;
+    const categoryId = req.query.delete;
     const data = await MYCATEGORY.findOneAndDelete({ _id: categoryId });
     console.log(data);
     res.status(200).json({
       status: 200,
       message: 'Category deleted successfully.',
+      data
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 404,
+      message: error.message,
+    });
+  }
+});
+
+// ----------------------------------------------------
+
+// ------------------- My Brand -----------------------
+
+// Get brand data
+router.get('/my-brand/:id?', async function (req, res, next) {
+  let myBrand;
+  let DataCount;
+  let pageCount = req.query.page;
+  let search = req.query.search;
+  try {
+    if (req.params.id) {
+      myBrand = await MYBRAND.findById(req.params.id);
+    } else if (pageCount && search) {
+      DataCount = await MYBRAND.find({
+        $or: [{ brand: { $regex: search, $options: 'i' } }]
+      }).count();
+      myBrand = await MYBRAND.find({
+        $or: [{ brand: { $regex: search, $options: 'i' } }]
+      }).skip((pageCount - 1) * 5).limit(5).sort({brand: 1});
+    } else if (pageCount) {
+      DataCount = await MYBRAND.count();
+      myBrand = await MYBRAND.find().skip((pageCount - 1) * 5).limit(5);
+    } else {
+      myBrand = await MYBRAND.find();
+    }
+    res.status(200).json({
+      status: 200,
+      message: myBrand,
+      data: DataCount
+    })
+  } catch (error) {
+    res.status(404).json({
+      status: 400,
+      data: error.message
+    })
+
+  }
+})
+
+// Added new brand
+router.post('/add-brand/:id?', async function (req, res, next) {
+  try {
+    let id = !req.params.id ? new mongoose.Types.ObjectId() : req.params.id
+    const data = await MYBRAND.findByIdAndUpdate(id,
+      { $set: req.body },
+      { upsert: true }
+    );
+    res.status(200).json({
+      status: 200,
+      data,
+      message: "Your brand has been added."
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 404,
+      message: error.message
+    });
+  }
+})
+
+// Delete category
+router.get('/delete-brand', async function (req, res, next) {
+  try {
+    const brandId = req.query.delete;
+    const data = await MYBRAND.findOneAndDelete({ _id: brandId });
+    res.status(200).json({
+      status: 200,
+      message: 'Brand deleted successfully.',
       data
     });
   } catch (error) {

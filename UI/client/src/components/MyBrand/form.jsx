@@ -18,7 +18,7 @@ function AddCategory() {
 
     useEffect(() => {
         if (params.id) {
-            axios.get("http://localhost:4000/my-category/" + params.id)
+            axios.get("http://localhost:4000/my-brand/" + params.id)
                 .then(({ data }) => {
                     setInitialValues(data.message);
                 })
@@ -49,18 +49,19 @@ function AddCategory() {
         enableReinitialize: true,
         validationSchema,
         onSubmit: async (values) => {
-            // await axios({
-            //     method: 'post',
-            //     url: params.id ? 'http://localhost:4000/add-category/' + params.id : 'http://localhost:4000/add-category',
-            //     data: values,
-            // })
-            //     .then((response) => {
-            //         // await contract.methods.write(response.data.data._id).send({ from: accounts[0] });
-            //         navigate('/my-category')
-            //     })
-            //     .catch((error) => {
-            //         console.log(error);
-            //     });
+            console.log(values);
+            await axios({
+                method: 'post',
+                url: params.id ? 'http://localhost:4000/add-brand/' + params.id : 'http://localhost:4000/add-brand',
+                data: values,
+            })
+                .then((response) => {
+                    // await contract.methods.write(response.data.data._id).send({ from: accounts[0] });
+                    navigate('/my-brand')
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         },
     });
 

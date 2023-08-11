@@ -9,34 +9,63 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from 'axios';
+import Select from 'react-select';
 
 function AddCategory() {
     let navigate = useNavigate();
     let params = useParams();
     const [isDisabled, setDisabled] = useState(true);
     const [Status, setStatus] = useState(1);
+    const [Brands, setBrands] = useState([]);
+    const [defaultOption, setdefaultOption] = useState([]);
+
+    const GetBrandOption = () => {
+        axios.get("http://localhost:4000/my-brand/")
+            .then(({ data }) => {
+                setBrands(data.message);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
 
     useEffect(() => {
         if (params.id) {
             axios.get("http://localhost:4000/my-category/" + params.id)
                 .then(({ data }) => {
+                    
+                    // setdefaultOption(data.message.brand.length && data.message.brand.map((ele) => ({ value: ele._id, label: ele.brand })));
+                    console.log(data.message.brand.length ? data.message.brand.map((ele) => ({ value: ele._id, label: ele.brand })) : []);
+                    setdefaultOption(data.message.brand.length ? data.message.brand.map((ele) => ({ value: ele._id, label: ele.brand })) : []);
                     setInitialValues(data.message);
                 })
                 .catch((error) => {
                     console.log(error);
                 })
+            GetBrandOption();
+        } else {
+            GetBrandOption();
         }
     }, []);
+
 
     const [initialValues, setInitialValues] = useState({
         brand: "",
         category: "",
         status: Status,
     });
-
+    
+    
     const validationSchema = yup.object({
-        brand: yup.string().required("Brand name is required."),
         category: yup.string().required("Category name is required."),
+        brand: yup
+            .array(
+                yup.object({
+                    value: yup.string(),
+                    label: yup.string(),
+                }),
+            )
+            .min(1).required("Please select any one")
     });
 
     const {
@@ -45,16 +74,23 @@ function AddCategory() {
         touched,
         handleChange,
         handleSubmit,
-        handleBlur
+        handleBlur,
+        setFieldValue
     } = useFormik({
         initialValues,
         enableReinitialize: true,
         validationSchema,
         onSubmit: async (values) => {
+            const copyVal = {...values}
+            console.log("copyVal", copyVal);
+            if (copyVal.brand && copyVal.brand.length) {
+                copyVal.brand = copyVal.brand.map((ele) => ele.value ? ele.value : ele)
+            }
+            console.log(copyVal);
             await axios({
                 method: 'post',
                 url: params.id ? 'http://localhost:4000/add-category/' + params.id : 'http://localhost:4000/add-category',
-                data: values,
+                data: copyVal,
             })
                 .then((response) => {
                     // await contract.methods.write(response.data.data._id).send({ from: accounts[0] });
@@ -65,7 +101,8 @@ function AddCategory() {
                 });
         },
     });
-
+    const options = Brands && Brands.length ? Brands.map((el) => ({ value: el._id, label: el.brand })) : []
+    console.log("values", values);
     return (
         <>
             <div className="content-header">
@@ -102,18 +139,15 @@ function AddCategory() {
                                     <label>
                                         Category Brand<span className="required-lable">*</span>
                                     </label>
-                                    <select
-                                        className="form-select"
-                                        name="brand"
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        value={values.brand}
-                                    >
-                                        <option value="">Select Brand</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
+                                    <Select
+                                        // value={defaultOption[0]}
+                                        value={defaultOption}
+                                        isMulti
+                                        options={options}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                        onChange={(e) => {setFieldValue("brand", e); setdefaultOption(e)}}
+                                    />
                                     {errors.brand && touched.brand ? (
                                         <span className="required-lable">{errors.brand} </span>
                                     ) : null}
