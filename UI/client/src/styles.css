@@ -10,7 +10,7 @@
 }
 
 .ck-editor__editable {
-  min-height: 500px;
+  min-height: 400px;
 }
 
 /* Commen CSS */
@@ -80,6 +80,35 @@ label {
   font-weight: 700;
   color: darkgrey;
   text-align: center;
+}
+
+.ck-focused {
+  border-color: #a1a7ab !important;
+}
+
+.ck.ck-button:focus {
+  border-color: #a1a7ab;
+  outline: 0;
+  box-shadow: 0 0 0 0.05rem rgba(227 229 231);
+}
+
+.ck.ck-button.ck-disabled:focus {
+  box-shadow: 0 0 0 0.05rem rgba(227 229 231);
+}
+
+.ck.ck-button.ck-on,
+a.ck.ck-button.ck-on {
+  color: #343a40;
+}   
+
+.ck.ck-button.ck-on,
+a.ck.ck-button.ck-on {
+  background: #343a4026;
+}
+
+.ck.ck-button.ck-on:not(.ck-disabled):hover,
+a.ck.ck-button.ck-on:not(.ck-disabled):hover {
+  background: #343a403a;
 }
 
 /* ----------------------------------- */
@@ -532,7 +561,7 @@ label {
   transition: .3s;
 }
 
-.product-images:hover .product-img-icon{
+.product-images:hover .product-img-icon {
   opacity: 1;
 }
 

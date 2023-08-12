@@ -4,8 +4,8 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const MyProduct = mongoose.Schema({
     product: { type: String, required: true },
-    category: { type: Number, required: true },
-    brand: { type: Number, required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'my_category', required: true },
+    brand: { type: mongoose.Schema.Types.ObjectId, ref: 'my_brand', required: true },
     color: { type: String, required: true },
     price: { type: Number, required: true },
     qty: { type: Number, required: true },
@@ -14,7 +14,6 @@ const MyProduct = mongoose.Schema({
     details: { type: String, required: true },
     images: { type: String, required: true },
     status: { type: Number, required: true },
-    // proId: Number
 });
 
 // MyProduct.plugin(AutoIncrement, { inc_field: 'product_id' });

@@ -3,7 +3,8 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const MyBrand = mongoose.Schema({
     brand: { type: String, required: true, unique: true },
-    status: { type: Number, required: true }
+    status: { type: Number, required: true },
+    // createdAt: 'created_at'
 });
 
 MyBrand.plugin(uniqueValidator);

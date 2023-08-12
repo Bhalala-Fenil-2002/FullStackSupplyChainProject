@@ -82,17 +82,49 @@ router.get('/home', authorization.Authentication, async function (req, res, next
 // ------------------ My Product ---------------------
 
 // Get Product Data
-router.get('/my-product/:id?', async function (req, res, next) {
+router.get('/my-product/:id?', authorization.Authentication,async function (req, res, next) {
   try {
     let myProduct;
     let DataCount;
     let pageCount = req.query.page;
-    console.log(req.query);
+    let search = req.query.search;
+    console.log(req.params);
     if (req.params.id || req.query.view) {
-      myProduct = await MYPRODUCT.findById(req.params.id ? req.params.id : req.query.view);
+      myProduct = await MYPRODUCT.findById(req.params.id ? req.params.id : req.query.view).populate([{
+        path: 'category',
+        model: 'my_category',
+        select: { 'category': 1 },
+      }, {
+        path: 'brand',
+        model: 'my_brand',
+        select: { 'brand': 1 },
+      }]);
+    } else if (req.query.search && pageCount) {
+      DataCount = await MYPRODUCT.find({
+        $or: [{ product: { $regex: search, $options: 'i' } }]
+      }).count();
+      myProduct = await MYPRODUCT.find({
+        $or: [{ product: { $regex: search, $options: 'i' }}]
+      }).populate([{
+        path: 'category',
+        model: 'my_category',
+        select: { 'category': 1 },
+      }, {
+          path: 'brand',
+          model: 'my_brand',
+          select: { 'brand': 1 },
+        }]).skip((pageCount - 1) * 5).limit(5).sort({'product': 1});
     } else {
       DataCount = await MYPRODUCT.count();
-      myProduct = await MYPRODUCT.find().skip((pageCount - 1) * 5).limit(5);
+      myProduct = await MYPRODUCT.find().populate([{
+        path: 'category',
+        model: 'my_category',
+        select: { 'category': 1 },
+      }, {
+        path: 'brand',
+        model: 'my_brand',
+        select: { 'brand': 1 },
+      }]).skip((pageCount - 1) * 5).limit(5).sort({ 'product': 1 });
     }
 
     res.status(200).json({
@@ -177,14 +209,21 @@ router.get('/my-category/:id?', async function (req, res, next) {
       myCategory = await MYCATEGORY.findById(req.params.id).populate(['brand']);
     } else if (pageCount && search) {
       DataCount = await MYCATEGORY.find({
-        $or: [{category: {$regex: search, $options: 'i'}}]
+        $or: [{ category: { $regex: search, $options: 'i' } }]
       }).count();
       myCategory = await MYCATEGORY.find({
-        $or: [{category: {$regex: search, $options: 'i'}}]
-      }).populate(['brand']).skip((pageCount - 1) * 5).limit(5).sort({category: 1});
-    } else if(pageCount) {
+        $or: [{ category: { $regex: search, $options: 'i' } }]
+      }).populate(['brand']).skip((pageCount - 1) * 5).limit(5).sort({ category: 1 });
+    } else if (pageCount) {
       DataCount = await MYCATEGORY.count();
-      myCategory = await MYCATEGORY.find().populate(['brand']).skip((pageCount - 1) * 5).limit(5).sort({ category: 1 });
+      myCategory = await MYCATEGORY.find().populate(['brand']).skip((pageCount - 1) * 5).limit(5).sort({ 'category': 1 });
+    } else if (req.query.b_id) {
+      myCategory = await MYCATEGORY.find({
+        brand: { $in: req.query.b_id }
+      });
+    }
+    else {
+      myCategory = await MYCATEGORY.find().select(['category', '_id']);
     }
     res.status(200).json({
       status: 200,
@@ -258,12 +297,12 @@ router.get('/my-brand/:id?', async function (req, res, next) {
       }).count();
       myBrand = await MYBRAND.find({
         $or: [{ brand: { $regex: search, $options: 'i' } }]
-      }).skip((pageCount - 1) * 5).limit(5).sort({brand: 1});
+      }).skip((pageCount - 1) * 5).limit(5).sort({ brand: 1 });
     } else if (pageCount) {
       DataCount = await MYBRAND.count();
-      myBrand = await MYBRAND.find().skip((pageCount - 1) * 5).limit(5);
+      myBrand = await MYBRAND.find().skip((pageCount - 1) * 5).limit(5).sort({ brand: 1 });
     } else {
-      myBrand = await MYBRAND.find();
+      myBrand = await MYBRAND.find().select(['brand', '_id']).sort({brand: 1});
     }
     res.status(200).json({
       status: 200,
