@@ -9,12 +9,13 @@ function ProductView() {
     let params = useParams();
     const [productData, setProductData] = useState("");
 
-
     useEffect(() => {
-        axios.get(`http://localhost:4000/my-product/`, { params: { view: params.id } })
+        axios.get(`http://localhost:4000/my-product/?view=${params.id}`, {
+            headers: {
+                'authorization': localStorage.getItem('session_id')
+            }
+        })
             .then((response) => {
-                
-                console.log(response.data.message);
                 setProductData(response.data.message)
             })
             .catch((error) => {
@@ -69,11 +70,11 @@ function ProductView() {
                                 </tr>
                                 <tr>
                                     <td>Category</td>
-                                    <td>{productData.brand}</td>
+                                    <td>{productData.brand.brand}</td>
                                 </tr>
                                 <tr>
                                     <td>General Code</td>
-                                    <td>{productData.category}</td>
+                                    <td>{productData.category.category}</td>
                                 </tr>
                                 <tr>
                                     <td>SKUs Code</td>

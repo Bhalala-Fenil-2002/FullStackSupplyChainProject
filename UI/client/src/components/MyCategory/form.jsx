@@ -33,9 +33,6 @@ function AddCategory() {
         if (params.id) {
             axios.get("http://localhost:4000/my-category/" + params.id)
                 .then(({ data }) => {
-                    
-                    // setdefaultOption(data.message.brand.length && data.message.brand.map((ele) => ({ value: ele._id, label: ele.brand })));
-                    console.log(data.message.brand.length ? data.message.brand.map((ele) => ({ value: ele._id, label: ele.brand })) : []);
                     setdefaultOption(data.message.brand.length ? data.message.brand.map((ele) => ({ value: ele._id, label: ele.brand })) : []);
                     setInitialValues(data.message);
                 })

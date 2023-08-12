@@ -16,8 +16,13 @@ function DataTable({ dataGetter }) {
     }, [currentPage, serachRes]);
 
     const getProducts = (page) => {
-        axios.get(`http://localhost:4000/${dataGetter.get}?search=${serachRes}&page=${page}`)
+        axios.get(`http://localhost:4000/${dataGetter.get}?search=${serachRes}&page=${page}`, {
+            headers: {
+                'authorization': localStorage.getItem('session_id')
+            }
+        })
             .then((response) => {
+                console.log(response.data.message);
                 setMyproduct(response.data.message)
                 setDataCount(response.data.data);
             })
@@ -80,9 +85,16 @@ function DataTable({ dataGetter }) {
                                     dataGetter.TableCol.map((filed_val, filed_key) => {
                                         if (filed_val === "brand" && typeof val[filed_val] !== "string" && val[filed_val].length) {
                                             return <td key={filed_key}>{val[filed_val].length ? val[filed_val].map((el) => el.brand).join(', ') : ""}</td>
+                                        } else if (filed_val === "brand" && typeof val[filed_val] == "object") {
+                                            return <td key={filed_key} >{val[filed_val].brand}</td>
                                         } else if (filed_val === 'image') {
                                             return <td key={filed_key} className={filed_val === 'image' ? 'table-img' : ''} ><img src={'http://localhost:4000/images/my_products/' + val['images']} alt={val['product']} srcSet="" width="100%" /></td>
-                                        } else {
+                                        } else if (filed_val === 'category' && typeof val[filed_val] == "object") {
+                                            return <td key={filed_key} >{val[filed_val].category}</td>
+                                        } else if (filed_val === 'category') {
+                                            return <td key={filed_key} >{val[filed_val]}</td>
+                                        }
+                                        else {
                                             return <td key={filed_key} >{val[filed_val]}</td>
                                         }
 

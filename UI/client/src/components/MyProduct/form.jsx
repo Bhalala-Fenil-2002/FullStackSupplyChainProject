@@ -22,6 +22,8 @@ function AddProduct() {
   const [SKUsnum, setSKUsnum] = useState("");
   const [Status, setStatus] = useState(1);
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+  const [Category, setCategory] = useState([]);
+  const [Brand, setBrand] = useState([]);
   let navigate = useNavigate();
 
   // ------ Formik ------
@@ -47,12 +49,36 @@ function AddProduct() {
           setCode(data.message.code);
           setSKUsnum(data.message.skus);
           setPreImage("http://localhost:4000/images/my_products/" + data.message.images);
+          categoryData(data.message.brand._id)
         })
         .catch((error) => {
           console.log(error);
         })
     }
+    brandData();
   }, [])
+
+  const categoryData = async (b_id) => {
+    console.log(b_id);
+    await axios.get(`http://localhost:4000/my-category/?b_id=${b_id}`)
+      .then(({ data }) => {
+        setCategory(data.message)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+
+  const brandData = async () => {
+    await axios.get("http://localhost:4000/my-brand/")
+      .then(({ data }) => {
+        setBrand(data.message)
+        console.log(data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
 
   const validationSchema = yup.object({
     images: yup
@@ -88,8 +114,18 @@ function AddProduct() {
       .max(100, "less then 15 char.")
       .required("Product name is required."),
     color: yup.string().required("Product color is required."),
-    brand: yup.string().required("Brand name is required."),
-    category: yup.string().required("Category name is required."),
+    brand: yup.mixed().required("Brand name is required.").test((value) => {
+      if (params.id) {
+        return true;
+      }
+      return true
+    }),
+    category: yup.mixed().required("Category name is required.").test((value) => {
+      if (params.id) {
+        return true
+      }
+      return true
+    }),
     price: yup
       .string()
       .required("Price is required.")
@@ -120,10 +156,16 @@ function AddProduct() {
     enableReinitialize: true,
     validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       if (typeof values.images == "string") {
         delete values.images
       }
+      if (typeof values.brand == 'object') {
+        values.brand = values.brand._id
+      }
+      if (typeof values.category == 'object') {
+        values.category = values.category._id
+      }
+      // console.log('values.brand', values);
       await axios({
         method: 'post',
         url: params.id ? 'http://localhost:4000/add-product/' + params.id : 'http://localhost:4000/add-product',
@@ -242,15 +284,16 @@ function AddProduct() {
                   </label>
                   <select
                     className="form-select"
-                    name="brand"
-                    onChange={handleChange}
+                    onChange={(e) => { setFieldValue('brand', e.target.value); categoryData(e.target.value)}}
                     onBlur={handleBlur}
-                    value={values.brand}
+                    value={values.brand._id}
                   >
                     <option value="">Select Brand</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    {
+                      Brand.map((val, key) => {
+                        return <option key={key} value={val._id}>{val.brand}</option>
+                      })
+                    }
                   </select>
                   {errors.brand && touched.brand ? (
                     <span className="required-lable">{errors.brand} </span>
@@ -265,12 +308,14 @@ function AddProduct() {
                     name="category"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.category}
+                    value={values.category._id}
                   >
                     <option value="">Select Category</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    {
+                      Category.map((val, key) => {
+                        return <option key={key} value={val._id}>{ val.category }</option>
+                      })
+                    }
                   </select>
                   {errors.category && touched.category ? (
                     <span className="required-lable">{errors.category} </span>
