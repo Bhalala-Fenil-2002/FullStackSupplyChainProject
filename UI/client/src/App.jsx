@@ -25,9 +25,11 @@ import AddCategory from './components/MyCategory/form';
 import MyBrand from './components/MyBrand';
 import AddBrand from './components/MyBrand/form';
 
+import { EthProvider } from "./contexts/EthContext";
+
 function App() {
   return (
-    <>
+    <EthProvider>
       <Routes>
         {/* Auth */}
         <Route path="/" element={<SignIn />} />
@@ -54,7 +56,7 @@ function App() {
         {/* PageNotFound */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
-    </>
+    </EthProvider>
   );
 }
 

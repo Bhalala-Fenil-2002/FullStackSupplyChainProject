@@ -11,11 +11,11 @@ import * as yup from "yup";
 import axios from 'axios';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-// import useEth from "../../contexts/EthContext/useEth";
+import useEth from "../../contexts/EthContext/useEth";
 
 function AddProduct() {
   let params = useParams();
-  // const { state: { contract, accounts } } = useEth();
+  const { state: { contract, accounts } } = useEth();
   const [isDisabled, setDisabled] = useState(true);
   const [PreImage, setPreImage] = useState("");
   const [Code, setCode] = useState();
@@ -56,10 +56,9 @@ function AddProduct() {
         })
     }
     brandData();
-  }, [])
+  }, [contract])
 
   const categoryData = async (b_id) => {
-    console.log(b_id);
     await axios.get(`http://localhost:4000/my-category/?b_id=${b_id}`)
       .then(({ data }) => {
         setCategory(data.message)
@@ -73,7 +72,6 @@ function AddProduct() {
     await axios.get("http://localhost:4000/my-brand/")
       .then(({ data }) => {
         setBrand(data.message)
-        console.log(data.message);
       })
       .catch((error) => {
         console.log(error);
@@ -165,16 +163,17 @@ function AddProduct() {
       if (typeof values.category == 'object') {
         values.category = values.category._id
       }
-      // console.log('values.brand', values);
       await axios({
         method: 'post',
         url: params.id ? 'http://localhost:4000/add-product/' + params.id : 'http://localhost:4000/add-product',
         data: values,
         headers: { 'Content-Type': 'multipart/form-data' }
       })
-        .then((response) => {
-          // await contract.methods.write(response.data.data._id).send({ from: accounts[0] });
-          navigate('/my-product')
+        .then(async (response) => {
+          const addItem = await contract.methods.AddItem(response.data.data._id).send({ from: '0xa5fF5605A48caA0Daa6E05AC62F85E96397A9D14', gas: '1000000' });
+          if (addItem) {
+            navigate('/my-product')
+          }
         })
         .catch((error) => {
           console.log(error);

@@ -5,7 +5,6 @@ import { FaCircleArrowRight, FaCartArrowDown, FaChartColumn } from "react-icons/
 import { FaCartPlus, FaBoxes } from "react-icons/fa";
 
 function Dashboard() {
-
     
     return (
         <>

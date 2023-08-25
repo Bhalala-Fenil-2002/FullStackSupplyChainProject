@@ -22,7 +22,6 @@ function DataTable({ dataGetter }) {
             }
         })
             .then((response) => {
-                console.log(response.data.message);
                 setMyproduct(response.data.message)
                 setDataCount(response.data.data);
             })
@@ -34,7 +33,6 @@ function DataTable({ dataGetter }) {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     }
-
 
     const UpdateProduct = (id) => {
         return navigate(`/${dataGetter.post}/` + id)
@@ -53,9 +51,7 @@ function DataTable({ dataGetter }) {
         return navigate(`/${dataGetter.view}/` + id)
     }
 
-
     // if (!myproduct || !Object.keys(myproduct).length) return <p>...loading</p>
-    console.log(dataGetter.TableCol.length + 2);
     return (
         <>
             <div className="row mb-3">
@@ -80,7 +76,7 @@ function DataTable({ dataGetter }) {
                     {
                         (myproduct.length ? myproduct.map((val, inx) => {
                             return <tr key={inx}>
-                                <td>{inx + 1}</td>
+                                <td key={inx}>{inx + 1}</td>
                                 {
                                     dataGetter.TableCol.map((filed_val, filed_key) => {
                                         if (filed_val === "brand" && typeof val[filed_val] !== "string" && val[filed_val].length) {
@@ -115,8 +111,8 @@ function DataTable({ dataGetter }) {
             <div className='footer-pagination'>
                 <ul className='paginations d-flex justify-content-end'>
                     {
-                        dataCount > 5 && Array.apply(null, Array(Math.ceil(dataCount / 5))).map((val, key) => {
-                            return <li className={`pages-item ${currentPage == (key + 1) ? 'active' : ''}`} onClick={() => handlePageChange(key + 1)}>{key + 1}</li>
+                        dataCount > 10 && Array.apply(null, Array(Math.ceil(dataCount / 10))).map((val, key) => {
+                            return <li key={key} className={`pages-item ${currentPage == (key + 1) ? 'active' : ''}`} onClick={() => handlePageChange(key + 1)}>{key + 1}</li>
                         })
                     }
                 </ul>

@@ -18,7 +18,6 @@ function SignIn() {
         await axios
             .post(`http://localhost:4000/signin`, UserData)
             .then((res) => {
-                console.log(res);
                 localStorage.setItem('session_id', res.data.token);
                 if (res.data.status === 200) {
                     navigate("/home");

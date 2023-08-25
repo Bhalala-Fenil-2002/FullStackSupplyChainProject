@@ -79,11 +79,9 @@ function AddCategory() {
         validationSchema,
         onSubmit: async (values) => {
             const copyVal = {...values}
-            console.log("copyVal", copyVal);
             if (copyVal.brand && copyVal.brand.length) {
                 copyVal.brand = copyVal.brand.map((ele) => ele.value ? ele.value : ele)
             }
-            console.log(copyVal);
             await axios({
                 method: 'post',
                 url: params.id ? 'http://localhost:4000/add-category/' + params.id : 'http://localhost:4000/add-category',
@@ -99,7 +97,6 @@ function AddCategory() {
         },
     });
     const options = Brands && Brands.length ? Brands.map((el) => ({ value: el._id, label: el.brand })) : []
-    console.log("values", values);
     return (
         <>
             <div className="content-header">
