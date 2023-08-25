@@ -9,32 +9,28 @@ function EthProvider({ children }) {
   const init = useCallback(
     async artifact => {
       if (artifact) {
+        const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
+        const accounts = await web3.eth.requestAccounts();
+        const networkID = await web3.eth.net.getId();
+        const { abi } = artifact;
+        let address, contract;
         try {
-          const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
-          // console.log("web3", web3);
-          await window.ethereum.enable();
-          const accounts = await web3.eth.getAccounts();
-          // console.log("web3", accounts);
-          const networkID = await web3.eth.net.getId();
-          const { abi } = artifact;
-          let address, contract;
           address = artifact.networks[networkID].address;
           contract = new web3.eth.Contract(abi, address);
-          dispatch({
-            type: actions.init,
-            data: { artifact, web3, accounts, networkID, contract }
-          });
         } catch (err) {
           console.error(err);
         }
-
+        dispatch({
+          type: actions.init,
+          data: { artifact, web3, accounts, networkID, contract }
+        });
       }
     }, []);
 
   useEffect(() => {
     const tryInit = async () => {
       try {
-        const artifact = require("../../contracts/SimpleStorage.json");
+        const artifact = require("../../contracts/ItemManager.json");
         init(artifact);
       } catch (err) {
         console.error(err);

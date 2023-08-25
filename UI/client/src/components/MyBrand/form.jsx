@@ -49,7 +49,6 @@ function AddCategory() {
         enableReinitialize: true,
         validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
             await axios({
                 method: 'post',
                 url: params.id ? 'http://localhost:4000/add-brand/' + params.id : 'http://localhost:4000/add-brand',

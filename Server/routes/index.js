@@ -26,6 +26,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
+const limit = 10;
+
 // Sign-Up 
 router.post('/signup', async function (req, res, next) {
   try {
@@ -88,7 +90,6 @@ router.get('/my-product/:id?', authorization.Authentication,async function (req,
     let DataCount;
     let pageCount = req.query.page;
     let search = req.query.search;
-    console.log(req.params);
     if (req.params.id || req.query.view) {
       myProduct = await MYPRODUCT.findById(req.params.id ? req.params.id : req.query.view).populate([{
         path: 'category',
@@ -113,7 +114,7 @@ router.get('/my-product/:id?', authorization.Authentication,async function (req,
           path: 'brand',
           model: 'my_brand',
           select: { 'brand': 1 },
-        }]).skip((pageCount - 1) * 5).limit(5).sort({'product': 1});
+        }]).skip((pageCount - 1) * limit).limit(limit).sort({'product': 1});
     } else {
       DataCount = await MYPRODUCT.count();
       myProduct = await MYPRODUCT.find().populate([{
@@ -124,7 +125,7 @@ router.get('/my-product/:id?', authorization.Authentication,async function (req,
         path: 'brand',
         model: 'my_brand',
         select: { 'brand': 1 },
-      }]).skip((pageCount - 1) * 5).limit(5).sort({ 'product': 1 });
+      }]).skip((pageCount - 1) * limit).limit(limit).sort({ 'product': 1 });
     }
 
     res.status(200).json({
@@ -145,23 +146,14 @@ router.post('/add-product/:id?', upload.single('images'), async function (req, r
   let newData = { ...req.body }
   let data;
   try {
-    // if (req.params.id) {
-    //   req.file ? newData.images = req.file.filename : ''
-    //   data = await MYPRODUCT.findOneAndUpdate({ _id: req.params.id }, newData)
-    // } else {
-    //   newData.images = req.file.filename
-    //   let totalCount = await MYPRODUCT.count();
-    //   data = await MYPRODUCT.create(newData);
-    // }
-
-    if (req.file) {
+    if (req.params.id) {
+      req.file ? newData.images = req.file.filename : ''
+      data = await MYPRODUCT.findOneAndUpdate({ _id: req.params.id }, newData)
+    } else {
       newData.images = req.file.filename
+      let totalCount = await MYPRODUCT.count();
+      data = await MYPRODUCT.create(newData);
     }
-    let id = !req.params.id ? new mongoose.Types.ObjectId() : req.params.id
-    data = await MYPRODUCT.findByIdAndUpdate(id,
-      { $set: newData },
-      { upsert: true }
-    );
 
     res.status(200).json({
       status: true,
@@ -213,10 +205,10 @@ router.get('/my-category/:id?', async function (req, res, next) {
       }).count();
       myCategory = await MYCATEGORY.find({
         $or: [{ category: { $regex: search, $options: 'i' } }]
-      }).populate(['brand']).skip((pageCount - 1) * 5).limit(5).sort({ category: 1 });
+      }).populate(['brand']).skip((pageCount - 1) * limit).limit(limit).sort({ category: 1 });
     } else if (pageCount) {
       DataCount = await MYCATEGORY.count();
-      myCategory = await MYCATEGORY.find().populate(['brand']).skip((pageCount - 1) * 5).limit(5).sort({ 'category': 1 });
+      myCategory = await MYCATEGORY.find().populate(['brand']).skip((pageCount - 1) * limit).limit(limit).sort({ 'category': 1 });
     } else if (req.query.b_id) {
       myCategory = await MYCATEGORY.find({
         brand: { $in: req.query.b_id }
@@ -264,7 +256,6 @@ router.get('/delete-category', async function (req, res, next) {
   try {
     const categoryId = req.query.delete;
     const data = await MYCATEGORY.findOneAndDelete({ _id: categoryId });
-    console.log(data);
     res.status(200).json({
       status: 200,
       message: 'Category deleted successfully.',
@@ -297,10 +288,10 @@ router.get('/my-brand/:id?', async function (req, res, next) {
       }).count();
       myBrand = await MYBRAND.find({
         $or: [{ brand: { $regex: search, $options: 'i' } }]
-      }).skip((pageCount - 1) * 5).limit(5).sort({ brand: 1 });
+      }).skip((pageCount - 1) * limit).limit(limit).sort({ brand: 1 });
     } else if (pageCount) {
       DataCount = await MYBRAND.count();
-      myBrand = await MYBRAND.find().skip((pageCount - 1) * 5).limit(5).sort({ brand: 1 });
+      myBrand = await MYBRAND.find().skip((pageCount - 1) * limit).limit(limit).sort({ brand: 1 });
     } else {
       myBrand = await MYBRAND.find().select(['brand', '_id']).sort({brand: 1});
     }

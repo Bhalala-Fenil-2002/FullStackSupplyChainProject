@@ -33,7 +33,7 @@ function Intro({ children }) {
     }, []);
 
     return (
-        <EthProvider>
+        // <EthProvider>
             <div className="wrapper">
                 <Navbar />
                 <Sidebar userData={userData} />
@@ -44,7 +44,7 @@ function Intro({ children }) {
                 </div>
                 <Footer />
             </div>
-        </EthProvider>
+        // </EthProvider>
     );
 }
 
