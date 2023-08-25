@@ -52,24 +52,24 @@ function SideBar({ userData }) {
                                 <div className='menu-title'>My Products</div>
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link className='menuitem'>
                                 <FaUserGroup size={18} color='#b5b5b5' className='menu-icon' />
                                 <div className='menu-title'>Client</div>
                             </Link>
-                        </li>
+                        </li> */}
                         <li>
                             <Link className='menuitem'>
                                 <FaCartPlus size={20} color='#b5b5b5' className='menu-icon' />
                                 <div className='menu-title'>My Orders</div>
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <a href='javascript:void(0)' className='menuitem' onClick={SignOut}>
                                 <FaRightFromBracket size={18} color='#b5b5b5' className='menu-icon' />
                                 <div className='menu-title'>Sign Out</div>
                             </a>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
             </div>
