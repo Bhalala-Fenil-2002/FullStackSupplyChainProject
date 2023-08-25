@@ -321,7 +321,6 @@ a.ck.ck-button.ck-on:not(.ck-disabled):hover {
 /* ---- Header section CSS --- */
 
 .main-header {
-  height: 59px;
   background-color: #f7f7f7;
   margin-left: 265px;
   border-bottom: 1px solid #b5b5b5;
@@ -329,6 +328,8 @@ a.ck.ck-button.ck-on:not(.ck-disabled):hover {
   width: calc(100% - 265px);
   top: 0;
   z-index: 999;
+  display: flex;
+  padding: 0 12px;
 }
 
 .nav-bar {
@@ -367,14 +368,10 @@ a.ck.ck-button.ck-on:not(.ck-disabled):hover {
 }
 
 .content-header {
-  padding: 20px 6px;
+  padding: 20px 0px;
   margin: 0;
   display: flex;
   justify-content: space-between;
-}
-
-.content {
-  padding: 0px 6px;
 }
 
 .content-header h1 {
