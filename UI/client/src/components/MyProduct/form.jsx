@@ -41,6 +41,16 @@ function AddProduct() {
     status: Status,
   })
 
+  // if (contract) {
+  //   (async () => {
+  //     try {
+  //       const addItem = await contract.methods.AddItem('12').send({ from: '0xa5fF5605A48caA0Daa6E05AC62F85E96397A9D14', gas: '1000000' });
+  //     } catch (error) {
+  //       getRPCErrorMessage(error)
+  //     }
+  //   })();
+  // }
+
   useEffect(() => {
     if (params.id) {
       axios.get("http://localhost:4000/my-product/" + params.id)
@@ -66,6 +76,19 @@ function AddProduct() {
       .catch((error) => {
         console.log(error);
       })
+  }
+
+  function getRPCErrorMessage(err) {
+    console.log('err', err);
+    var open = err.stack.indexOf('{')
+    var close = err.stack.lastIndexOf('}')
+    var j_s = err.stack.substring(open, close + 1);
+    console.log('j_s', j_s);
+    var j = JSON.parse(j_s);
+    console.log('j', j);
+    var reason = j.data[Object.keys(j.data)[0]].reason;
+    console.log(reason);
+    return reason;
   }
 
   const brandData = async () => {
@@ -139,7 +162,7 @@ function AddProduct() {
       .number("Allow only number.")
       .required("Code is required")
       .positive("Allow only positive number."),
-  });
+  });  
 
   const {
     values,
@@ -170,13 +193,21 @@ function AddProduct() {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
         .then(async (response) => {
-          const addItem = await contract.methods.AddItem(response.data.data._id).send({ from: '0xa5fF5605A48caA0Daa6E05AC62F85E96397A9D14', gas: '1000000' });
+          const addItem = await contract.methods.AddItem(response.data.data._id).send({ from: accounts[0], gas: '1000000' });
           if (addItem) {
+            console.log(addItem);
             navigate('/my-product')
           }
         })
         .catch((error) => {
-          console.log(error);
+          getRPCErrorMessage(error)
+          // console.log("error", error);
+          // let errorMsg, getError;
+          // errorMsg = error.message.replace("[ethjs-query] while formatting outputs from RPC '", "");
+          // errorMsg = errorMsg.substring("'", errorMsg.length - 1)
+          // getError = JSON.parse(errorMsg);
+          // let getError = getRPCErrorMessage(error);
+          // console.log(getError);
         });
     },
   });

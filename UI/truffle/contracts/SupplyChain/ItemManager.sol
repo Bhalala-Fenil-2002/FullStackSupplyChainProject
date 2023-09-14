@@ -27,7 +27,7 @@ contract ItemManager is Ownable {
         items.push(item);
     }
 
-    function ItemsData() public onlyOwner {
+    function ItemsData() public  {
         emit TestData(items);
         // return items;
     }

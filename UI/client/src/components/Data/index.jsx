@@ -10,12 +10,14 @@ function DataTable({ dataGetter }) {
     const [dataCount, setDataCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [serachRes, setserachRes] = useState('');
+    const [isLoading, setisLoading] = useState(false)
 
     useEffect(() => {
         getProducts(currentPage);
     }, [currentPage, serachRes]);
 
     const getProducts = (page) => {
+        setisLoading(true)
         axios.get(`http://localhost:4000/${dataGetter.get}?search=${serachRes}&page=${page}`, {
             headers: {
                 'authorization': localStorage.getItem('session_id')
@@ -24,6 +26,7 @@ function DataTable({ dataGetter }) {
             .then((response) => {
                 setMyproduct(response.data.message)
                 setDataCount(response.data.data);
+                setisLoading(false);
             })
             .catch((error) => {
                 console.log(error);
@@ -72,9 +75,9 @@ function DataTable({ dataGetter }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* {(myproduct && !Object.keys(myproduct).length ? <tr><td className='data-loader' colSpan={dataGetter.TableCol.length + 2}>Loading...</td></tr> : '')} */}
+                    {(myproduct && isLoading ? <tr><td className='data-loader' colSpan={dataGetter.TableCol.length + 2}><div class="lds-ring"><div></div><div></div><div></div><div></div></div></td></tr> : '')}
                     {
-                        (myproduct.length ? myproduct.map((val, inx) => {
+                        (myproduct.length && !isLoading ? myproduct.map((val, inx) => {
                             return <tr key={inx}>
                                 <td key={inx}>{inx + 1}</td>
                                 {
@@ -93,7 +96,6 @@ function DataTable({ dataGetter }) {
                                         else {
                                             return <td key={filed_key} >{val[filed_val]}</td>
                                         }
-
                                     })
                                 }
                                 <td className='action-col'>
@@ -103,7 +105,7 @@ function DataTable({ dataGetter }) {
                                 </td>
                             </tr>
                         }) : <tr>
-                            <td colSpan={9} className='text-center text-danger not-found-data'>Not Found</td>
+                                {!isLoading ? <td colSpan={9} className='text-center text-danger not-found-data'>Not Found</td> : ''}
                         </tr>)
                     }
                 </tbody>

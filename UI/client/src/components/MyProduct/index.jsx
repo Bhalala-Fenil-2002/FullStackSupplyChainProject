@@ -14,7 +14,8 @@ function MyProduct() {
     const read = async () => {
         if (contract) {
             try {
-                const Items = await contract.methods.ItemsData().call({ from: accounts['0xa5fF5605A48caA0Daa6E05AC62F85E96397A9D14'] });
+                const Items = await contract.methods.ItemsData().call({ from: accounts[0] });
+                console.log('Items', Items);
             } catch (error) {
                 let errorMsg = error.message.replace("Internal JSON-RPC error.", "");
                 let getError = JSON.parse(errorMsg).message.replace("VM Exception while processing transaction: revert ", "");
